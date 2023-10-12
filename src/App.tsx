@@ -1,11 +1,25 @@
-import React from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Chat from './pages/Chat';
+import Error from './pages/Error';
+import Main from './pages/Main';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Main />,
+  },
+  {
+    path: '/Chat',
+    element: <Chat />,
+  },
+  {
+    path: '*',
+    element: <Error />,
+  },
+]);
 
 const App = () => {
-  return (
-    <>
-      <h1 className='text-3xl text-center'>Chat App</h1>
-    </>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;
