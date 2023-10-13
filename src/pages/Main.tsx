@@ -1,9 +1,24 @@
-import React from 'react';
+import { useState } from 'react';
+import Login from '../components/Login';
+import Register from '../components/Register';
 
 const Main = () => {
+  const [form, setForm] = useState('Register');
+
+  const changeForm = () => {
+    if (form === 'Register') {
+      setForm('Login');
+    } else {
+      setForm('Register');
+    }
+  };
   return (
     <div>
-      <h1>Login/register page</h1>
+      {form === 'Register' ? (
+        <Login changeForm={changeForm} />
+      ) : (
+        <Register changeForm={changeForm} />
+      )}
     </div>
   );
 };

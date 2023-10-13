@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Chat = () => {
   const [userText, setUserText] = useState<string[]>([]);
