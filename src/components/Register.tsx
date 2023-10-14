@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 
 const Register = ({ changeForm }: any) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [confirmedPassword, setConfirmedPassword] = useState('');
+
   const [reg, setReg] = useState({
     username: '',
     password: '',
   });
   async function submitRegForm(e: any) {
     e.preventDefault();
+    if (reg.password !== confirmedPassword) {
+      alert('Passwords do not match');
+      return;
+    }
     console.log(reg);
   }
 
@@ -21,6 +27,10 @@ const Register = ({ changeForm }: any) => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  function ConfirmPasswordInput(e: React.ChangeEvent<HTMLInputElement>) {
+    setConfirmedPassword(e.target.value);
+  }
 
   return (
     <div className='bg-gray-100 h-screen flex justify-center items-center'>
@@ -52,6 +62,15 @@ const Register = ({ changeForm }: any) => {
               placeholder='Password'
               name='password'
               onChange={RegInput}
+              required
+            />
+            <input
+              type={showPassword ? 'text' : 'password'}
+              className='p-2 w-full border border-gray-400 mb-3 rounded-md focus:outline-none'
+              placeholder='Confirm Password'
+              name='confirmPassword'
+              value={confirmedPassword}
+              onChange={ConfirmPasswordInput}
               required
             />
             <div
