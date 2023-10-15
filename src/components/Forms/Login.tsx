@@ -71,6 +71,7 @@ const Login = ({ changeForm }: any) => {
             placeholder='Username'
             name='username'
             onChange={RegInput}
+            required
           />
           <div className='relative'>
             <input
@@ -79,6 +80,7 @@ const Login = ({ changeForm }: any) => {
               placeholder='Password'
               name='password'
               onChange={RegInput}
+              required
             />
             <div
               className='absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer'
