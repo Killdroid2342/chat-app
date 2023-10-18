@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import { decodeToken } from 'react-jwt';
 const { VITE_API_URL } = import.meta.env;
 import axios from 'axios';
+import Nav from '../components/Nav';
 const Chat = () => {
   Auth();
   const [userText, setUserText] = useState<string[]>([]);
@@ -55,17 +56,11 @@ const Chat = () => {
 
   return (
     <div className='h-screen bg-slate-900'>
-      <nav>
-        <ul className='flex flex-row justify-end'>
-          <li className='text-white m-3'>Account: {clientUsername}</li>
-          <li className='text-white m-3 cursor-pointer' onClick={logOut}>
-            Log Out
-          </li>
-          <li className='text-white m-3 cursor-pointer' onClick={deleteAccount}>
-            Delete Account
-          </li>
-        </ul>
-      </nav>
+      <Nav
+        clientUsername={clientUsername}
+        logOut={logOut}
+        deleteAccount={deleteAccount}
+      />
       <div className='flex flex-col items-center'>
         <h1 className='text-3xl text-white font-mono pt-10'>Chat App</h1>
       </div>
