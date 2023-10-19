@@ -6,22 +6,36 @@ import { decodeToken } from 'react-jwt';
 const { VITE_API_URL } = import.meta.env;
 import axios from 'axios';
 import Nav from '../components/Nav';
+import { io } from 'socket.io-client';
 const Chat = () => {
   Auth();
   const [userText, setUserText] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [clientUsername, setClientUsername] = useState('');
-
   const navigate = useNavigate();
   const instance = axios.create({
     baseURL: VITE_API_URL,
   });
-  console.log(userText.length);
-  console.log(userText);
+  const socket = io('http://localhost:4001', {
+    withCredentials: true,
+    extraHeaders: {
+      'my-custom-header': 'abcd',
+    },
+  });
+  socket.on('connect', () => {
+    console.log(`well done you have connected ${socket.id}`);
+  });
+  socket.on('recieve-message', (message) => {
+    setUserText((data) => [...data, message]);
+  });
+
   function submitForm(e: React.FormEvent) {
     e.preventDefault();
+    socket.emit('send-message', inputValue);
     setUserText((data) => [...data, inputValue]);
+    console.log((data: any) => [...data, inputValue]);
     setInputValue('');
+    console.log(inputValue);
   }
 
   function loginInput(e: React.ChangeEvent<HTMLInputElement>) {
