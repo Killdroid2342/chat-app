@@ -6,36 +6,57 @@ import { decodeToken } from 'react-jwt';
 const { VITE_API_URL } = import.meta.env;
 import axios from 'axios';
 import Nav from '../components/Nav';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
+
 const Chat = () => {
   Auth();
-  const [userText, setUserText] = useState<string[]>([]);
+  const [userText, setUserText] = useState<
+    Array<{ isSent: boolean; text: string; username: string }>
+  >([]);
+
   const [inputValue, setInputValue] = useState('');
   const [clientUsername, setClientUsername] = useState('');
+  const [socket, setSocket] = useState<Socket | null>(null);
   const navigate = useNavigate();
   const instance = axios.create({
     baseURL: VITE_API_URL,
   });
-  const socket = io('http://localhost:4001', {
-    withCredentials: true,
-    extraHeaders: {
-      'my-custom-header': 'abcd',
-    },
-  });
-  socket.on('connect', () => {
-    console.log(`well done you have connected ${socket.id}`);
-  });
-  socket.on('recieve-message', (message) => {
-    setUserText((data) => [...data, message]);
-  });
+
+  useEffect(() => {
+    const newSocket = io('http://localhost:4001');
+    setSocket(newSocket);
+
+    newSocket.on('connect', () => {
+      console.log(`well done you have connected ${newSocket.id}`);
+    });
+
+    newSocket.on('recieve-message', (message) => {
+      if (message.username && message.text) {
+        setUserText((data) => [
+          ...data,
+          { isSent: false, text: message.text, username: message.username },
+        ]);
+      }
+      console.log(message);
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
 
   function submitForm(e: React.FormEvent) {
     e.preventDefault();
-    socket.emit('send-message', inputValue);
-    setUserText((data) => [...data, inputValue]);
-    console.log((data: any) => [...data, inputValue]);
+    if (socket) {
+      const newMessage = {
+        isSent: true,
+        text: inputValue,
+        username: clientUsername,
+      };
+      socket.emit('send-message', newMessage);
+      setUserText((data) => [...data, newMessage]);
+    }
     setInputValue('');
-    console.log(inputValue);
   }
 
   function loginInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -47,6 +68,7 @@ const Chat = () => {
     Cookies.remove('UserjwtToken');
     navigate('/');
   }
+
   const usernameJWT = () => {
     const getJWT = Cookies.get('UserjwtToken');
     if (getJWT) {
@@ -81,12 +103,18 @@ const Chat = () => {
       <div className='border border-white rounded-lg mt-10'>
         <h2 className='text-center text-white'>Chat log</h2>
         <ul>
-          {userText.map((text, index) => (
+          {userText.map((message, index) => (
             <li
               key={index}
-              className='text-white text-end p-5 border border-white'
+              className={`p-5 border text-white ${
+                message.isSent
+                  ? 'text-end bg-blue-500 rounded-tl-xl rounded-bl-xl rounded-br-xl'
+                  : 'text-start bg-green-500 rounded-tr-xl rounded-br-xl rounded-bl-xl'
+              }`}
             >
-              {text}
+              <span className='text-white'>{message.username}:</span>{' '}
+              {message.text}
+              {/* <span className='text-white'>{' asdasd'}</span> */}
             </li>
           ))}
         </ul>
