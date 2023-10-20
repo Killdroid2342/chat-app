@@ -9,8 +9,6 @@ const io = require('socket.io')(socketPort, {
   cors: {
     origin: 'http://localhost:5173',
     methods: ['GET', 'POST'],
-    allowedHeaders: ['my-custom-header'],
-    credentials: true,
   },
 });
 
@@ -28,9 +26,9 @@ app.get('/', function (req, res) {
 });
 
 io.on('connection', (socket) => {
-  // console.log(`message: ${socket.id}`);
-  socket.on('send-message', (inputValue) => {
-    socket.broadcast.emit('recieve-message', inputValue);
+  socket.on('send-message', (message) => {
+    console.log(message);
+    socket.broadcast.emit('recieve-message', message);
   });
 });
 
