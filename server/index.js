@@ -11,8 +11,6 @@ const io = require('socket.io')(socketPort, {
     methods: ['GET', 'POST'],
   },
 });
-
-console.log();
 const corsOptions = {
   origin: ['http://localhost:5173'],
   optionsSuccessStatus: 200,
@@ -27,7 +25,6 @@ app.get('/', function (req, res) {
 
 io.on('connection', (socket) => {
   socket.on('send-message', (message) => {
-    console.log(message);
     socket.broadcast.emit('recieve-message', message);
   });
 });
