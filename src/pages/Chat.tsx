@@ -7,11 +7,12 @@ const { VITE_API_URL } = import.meta.env;
 import axios from 'axios';
 import Nav from '../components/Nav';
 import { io, Socket } from 'socket.io-client';
+import ChatInput from '../components/ChatInput';
 
 const Chat = () => {
   Auth();
   const [userText, setUserText] = useState<
-    Array<{ isSent: boolean; text: string; username: string }>
+    Array<{ isSent: boolean; text: string; username: string; time: string }>
   >([]);
 
   const [inputValue, setInputValue] = useState('');
@@ -27,14 +28,19 @@ const Chat = () => {
     setSocket(newSocket);
 
     newSocket.on('connect', () => {
-      console.log(`well done you have connected ${newSocket.id}`);
+      console.log(`Well done you have connected ${newSocket.id}`);
     });
 
     newSocket.on('recieve-message', (message) => {
       if (message.username && message.text) {
         setUserText((data) => [
           ...data,
-          { isSent: false, text: message.text, username: message.username },
+          {
+            isSent: false,
+            text: message.text,
+            username: message.username,
+            time: new Date().toLocaleTimeString(),
+          },
         ]);
       }
       console.log(message);
@@ -52,6 +58,7 @@ const Chat = () => {
         isSent: true,
         text: inputValue,
         username: clientUsername,
+        time: new Date().toLocaleTimeString(),
       };
       socket.emit('send-message', newMessage);
       setUserText((data) => [...data, newMessage]);
@@ -77,6 +84,7 @@ const Chat = () => {
       setClientUsername(decodedTokenUsername);
     } else return;
   };
+
   const deleteAccount = async () => {
     try {
       await instance.post('/user/delete-user', { username: clientUsername });
@@ -91,51 +99,21 @@ const Chat = () => {
   }, []);
 
   return (
-    <div className='h-screen bg-slate-900'>
+    <div className='h-screen bg-white'>
       <Nav
         clientUsername={clientUsername}
         logOut={logOut}
         deleteAccount={deleteAccount}
       />
-      <div className='flex flex-col items-center'>
-        <h1 className='text-3xl text-white font-mono pt-10'>Chat App</h1>
-      </div>
-      <div className='border border-white rounded-lg mt-10'>
-        <h2 className='text-center text-white'>Chat log</h2>
-        <ul>
-          {userText.map((message, index) => (
-            <li
-              key={index}
-              className={`p-5 border text-white ${
-                message.isSent
-                  ? 'text-end bg-blue-500 rounded-tl-xl rounded-bl-xl rounded-br-xl'
-                  : 'text-start bg-green-500 rounded-tr-xl rounded-br-xl rounded-bl-xl'
-              }`}
-            >
-              <span className='text-white'>{message.username}:</span>{' '}
-              {message.text}
-              {/* <span className='text-white'>{' asdasd'}</span> */}
-            </li>
-          ))}
-        </ul>
-        <form
-          onSubmit={submitForm}
-          className='border border-green-600 rounded-lg flex'
-        >
-          <input
-            type='text'
-            value={inputValue}
-            onChange={loginInput}
-            placeholder='Type Message...'
-            className='border border-white p-2 rounded-xl flex-grow'
-          />
-          <input
-            type='submit'
-            value='Submit'
-            className='border border-white text-white p-2 rounded-xl'
-          />
-        </form>
-      </div>
+      <h1 className='text-3xl text-neutral-800 font-mono pt-10 text-center'>
+        Chat App
+      </h1>
+      <ChatInput
+        userText={userText}
+        submitForm={submitForm}
+        inputValue={inputValue}
+        loginInput={loginInput}
+      />
     </div>
   );
 };
