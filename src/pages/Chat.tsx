@@ -109,6 +109,7 @@ const Chat = () => {
         Chat App
       </h1>
       <ChatInput
+        setUserText={setUserText}
         userText={userText}
         submitForm={submitForm}
         inputValue={inputValue}
