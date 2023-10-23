@@ -8,13 +8,16 @@ import axios from 'axios';
 import Nav from '../components/Nav';
 import { io, Socket } from 'socket.io-client';
 import ChatInput from '../components/Chat/ChatInput';
-
+interface chatData {
+  isSent: boolean;
+  text: string;
+  username: string;
+  time: string;
+}
 const Chat = () => {
   Auth();
-  const [userText, setUserText] = useState<
-    Array<{ isSent: boolean; text: string; username: string; time: string }>
-  >([]);
-
+  const [userText, setUserText] = useState<Array<chatData>>([]);
+  console.log(userText);
   const [inputValue, setInputValue] = useState('');
   const [clientUsername, setClientUsername] = useState('');
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -51,8 +54,9 @@ const Chat = () => {
     };
   }, []);
 
-  function submitForm(e: React.FormEvent) {
+  async function submitForm(e: React.FormEvent) {
     e.preventDefault();
+
     if (socket) {
       const newMessage = {
         isSent: true,
@@ -60,10 +64,22 @@ const Chat = () => {
         username: clientUsername,
         time: new Date().toLocaleTimeString(),
       };
-      socket.emit('send-message', newMessage);
       setUserText((data) => [...data, newMessage]);
+
+      socket.emit('send-message', newMessage);
+
+      try {
+        await instance.post('message/uploadMessage', {
+          text: newMessage.text,
+          time: newMessage.time,
+          username: newMessage.username,
+        });
+      } catch (e) {
+        console.error('Error posting the message:', e);
+      }
+
+      setInputValue('');
     }
-    setInputValue('');
   }
 
   function loginInput(e: React.ChangeEvent<HTMLInputElement>) {
