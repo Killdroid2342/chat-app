@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import Alert from './ChatAlert/Alert';
+
 export default function ChatInput({
   userText,
   submitForm,
@@ -5,15 +8,21 @@ export default function ChatInput({
   loginInput,
   setUserText,
 }: any) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+
   function deleteSessionText() {
     setUserText([]);
     console.log('deleted Session');
   }
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
   function checkInput() {
     if (inputValue === '') {
-      alert('Please Put details in input');
+      setModalMessage('Please put details in the input.');
+      setIsModalVisible(true);
     }
-    return;
   }
   return (
     <div className={'flex flex-col p-1'} style={{ height: '85vh' }}>
@@ -61,6 +70,9 @@ export default function ChatInput({
           onClick={checkInput}
         />
       </form>
+      {isModalVisible && (
+        <Alert modalMessage={modalMessage} closeModal={closeModal} />
+      )}
     </div>
   );
 }
