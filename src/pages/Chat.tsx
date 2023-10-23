@@ -7,7 +7,7 @@ const { VITE_API_URL } = import.meta.env;
 import axios from 'axios';
 import Nav from '../components/Nav';
 import { io, Socket } from 'socket.io-client';
-import ChatInput from '../components/ChatInput';
+import ChatInput from '../components/Chat/ChatInput';
 
 const Chat = () => {
   Auth();
