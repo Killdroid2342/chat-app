@@ -16,6 +16,17 @@ const uploadMessages = async (text, time, username) => {
   ]);
 };
 
+const getMessages = async () => {
+  const res = conn
+    .promise()
+    .query('SELECT * FROM messages ')
+    .then(([rows, fields]) => {
+      return rows;
+    });
+  return res;
+};
+
 module.exports = {
   uploadMessages,
+  getMessages,
 };
