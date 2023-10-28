@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Alert from './ChatAlert/Alert';
+const { VITE_API_URL } = import.meta.env;
+import axios from 'axios';
 
 export default function ChatInput({
   userText,
@@ -7,10 +9,13 @@ export default function ChatInput({
   inputValue,
   loginInput,
   setUserText,
+  clientUsername,
 }: any) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-
+  const instance = axios.create({
+    baseURL: VITE_API_URL,
+  });
   function deleteSessionText() {
     setUserText([]);
     console.log('deleted Session');
@@ -24,6 +29,15 @@ export default function ChatInput({
       setIsModalVisible(true);
     }
   }
+  async function gettingMessages() {
+    const res = await instance.get('/message/getMessages');
+    setUserText(res.data);
+    console.log(res);
+  }
+  useEffect(() => {
+    gettingMessages();
+  }, []);
+
   return (
     <div className={'flex flex-col p-1'} style={{ height: '85vh' }}>
       <div className='flex flex-col justify-center items-center'>
@@ -38,8 +52,8 @@ export default function ChatInput({
         {userText.map((message: any, index: any) => (
           <div
             key={index}
-            className={`p-3 text-lg m-2 w-40  ${
-              message.isSent
+            className={`p-3 text-lg m-2 w-40 ${
+              message.username === clientUsername
                 ? 'self-end text-end bg-blue-500 text-white ml-auto rounded-l-xl rounded-b-lg'
                 : 'self-start text-start bg-gray-200 text-black rounded-r-xl rounded-b-lg'
             }`}
