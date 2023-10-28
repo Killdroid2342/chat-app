@@ -130,6 +130,7 @@ const Chat = () => {
         submitForm={submitForm}
         inputValue={inputValue}
         loginInput={loginInput}
+        clientUsername={clientUsername}
       />
     </div>
   );
