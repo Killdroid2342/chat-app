@@ -7,12 +7,12 @@ const routes = require('./api/index');
 const socketPort = 4001;
 const io = require('socket.io')(socketPort, {
   cors: {
-    origin: ['http://localhost:5173', 'https://chat-app-inky-ten.vercel.app/'],
+    origin: ['http://localhost:5173', 'https://chat-app-inky-ten.vercel.app'],
     methods: ['GET', 'POST'],
   },
 });
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://chat-app-inky-ten.vercel.app/'],
+  origin: ['http://localhost:5173', 'https://chat-app-inky-ten.vercel.app'],
   optionsSuccessStatus: 200,
 };
 
