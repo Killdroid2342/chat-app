@@ -19,6 +19,7 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
+  console.log(import.meta.env.MODE);
   return <RouterProvider router={router} />;
 };
 
