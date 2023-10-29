@@ -3,12 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const conn = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'chat-app',
-});
+const conn = mysql.createConnection(process.env.DATABASE_URL);
 const createUser = async (username, password) => {
   conn.query('INSERT INTO users (username, password) VALUES (?,?)', [
     username,

@@ -1,11 +1,6 @@
 const mysql = require('mysql2');
 
-const conn = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'chat-app',
-});
+const conn = mysql.createConnection(process.env.DATABASE_URL);
 
 const uploadMessages = async (text, time, username) => {
   console.log(text, time, username);
