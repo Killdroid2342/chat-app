@@ -27,7 +27,7 @@ const Chat = () => {
   });
 
   useEffect(() => {
-    const newSocket = io('http://localhost:4001');
+    const newSocket = io(VITE_API_URL);
     setSocket(newSocket);
 
     newSocket.on('connect', () => {
