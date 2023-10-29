@@ -1,5 +1,3 @@
-import React from 'react';
-
 const FormModal = (props: any) => {
   return (
     <div className='fixed inset-0 flex justify-center z-50'>
