@@ -4,9 +4,11 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const routes = require('./api/index');
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://chat-app-inky-ten.vercel.app'],
+  origin: ['http://localhost:5173/', 'https://chat-app-inky-ten.vercel.app'],
   optionsSuccessStatus: 200,
 };
 
@@ -16,9 +18,6 @@ routes(app, { urlencodedParser });
 app.get('/', function (req, res) {
   res.send('Hello World');
 });
-
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
   socket.on('send-message', (message) => {

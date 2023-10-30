@@ -17,7 +17,6 @@ interface chatData {
 const Chat = () => {
   Auth();
   const [userText, setUserText] = useState<Array<chatData>>([]);
-  console.log(userText);
   const [inputValue, setInputValue] = useState('');
   const [clientUsername, setClientUsername] = useState('');
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -27,9 +26,10 @@ const Chat = () => {
   });
 
   useEffect(() => {
-    const newSocket = io(VITE_API_URL);
+    const newSocket = io(VITE_API_URL, {
+      transports: ['websocket', 'polling', 'flashsocket'],
+    });
     setSocket(newSocket);
-
     newSocket.on('connect', () => {
       console.log(`Well done you have connected ${newSocket.id}`);
     });

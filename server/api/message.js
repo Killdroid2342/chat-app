@@ -19,7 +19,6 @@ router.post('/uploadMessage', async (req, res) => {
 router.get('/getMessages', async (req, res) => {
   const messages = await getMessages();
   res.send(JSON.stringify(messages));
-  console.log(messages);
 });
 
 module.exports = router;

@@ -18,7 +18,6 @@ export default function ChatInput({
   });
   function deleteSessionText() {
     setUserText([]);
-    console.log('deleted Session');
   }
   const closeModal = () => {
     setIsModalVisible(false);
@@ -32,7 +31,6 @@ export default function ChatInput({
   async function gettingMessages() {
     const res = await instance.get('/message/getMessages');
     setUserText(res.data);
-    console.log(res);
   }
   useEffect(() => {
     gettingMessages();
