@@ -18,7 +18,6 @@ const Login = ({ changeForm }: any) => {
   const navigate = useNavigate();
   async function submitRegForm(e: any) {
     e.preventDefault();
-    console.log(login);
     const res = await instance.post('/user/login-user', {
       username: login.username,
       clientpassword: login.password,
